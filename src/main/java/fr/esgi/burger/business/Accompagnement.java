@@ -1,22 +1,32 @@
 package fr.esgi.burger.business;
 
+import lombok.Data;
+
 import java.util.Objects;
 
+@Data
 public class Accompagnement {
-    private long id;
-    private String nom;
-    private static long compteur;
 
-    public Accompagnement(long id, String nom) {
-        this.id = id;
+    private Long id;
+    private String nom;
+    private static Long compteur = 0L;
+
+    // Constructeur par défaut
+    public Accompagnement() {
+        this.id = ++compteur;
+    }
+
+    // Constructeur qui accepte le nom
+    public Accompagnement(String nom) {
+        this.id = ++compteur;
         this.nom = nom;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -28,11 +38,11 @@ public class Accompagnement {
         this.nom = nom;
     }
 
-    public static long getCompteur() {
+    public static Long getCompteur() {
         return compteur;
     }
 
-    public static void setCompteur(long compteur) {
+    public static void setCompteur(Long compteur) {
         Accompagnement.compteur = compteur;
     }
 
@@ -41,7 +51,7 @@ public class Accompagnement {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Accompagnement that = (Accompagnement) o;
-        return id == that.id && Objects.equals(nom, that.nom);
+        return Objects.equals(id, that.id) && Objects.equals(nom, that.nom);
     }
 
     @Override

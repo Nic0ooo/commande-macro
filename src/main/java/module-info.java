@@ -2,6 +2,7 @@ module fr.esgi.burger {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.desktop;
+    requires static lombok;
 
     opens fr.esgi to javafx.fxml;
     exports fr.esgi.burger;

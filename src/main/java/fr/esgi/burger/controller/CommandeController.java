@@ -1,165 +1,102 @@
 package fr.esgi.burger.controller;
 
-import fr.esgi.burger.service.impl.CommandeService;
+import fr.esgi.burger.business.Commandes;
+import fr.esgi.burger.service.CommandeService;
 import fr.esgi.burger.service.impl.CommandeServiceImpl;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.ToggleGroup;
+import javafx.event.ActionEvent;
 
-import javax.swing.*;
-import java.net.URL;
-import java.util.ResourceBundle;
-
-public class CommandeController implements Initializable {
-    public CheckBox samouraiCheck;
-    public CheckBox mayonnaiseCheck;
-    public CheckBox ketchupCheck;
-    private Long id;
-    private boolean estSurPlace;
-    private String burger;
-    private String accompagnement;
-    private String boisson;
-    private double prix;
-    private String remarquesTextArea;
+public class CommandeController {
 
     private final CommandeService commandeService = new CommandeServiceImpl();
-
-    private ObservableList<String> burgers =
-            FXCollections.observableArrayList("Big Mac","CBO","280","McFirst","McFish","McChicken","Royal Cheese");
-
-    private ObservableList<String> accompagnements =
-            FXCollections.observableArrayList("Frites","Coleslaw","Salade","Potatoes","Nuggets","Onion Rings");
-
-    private ObservableList<String> boissons =
-            FXCollections.observableArrayList("Coca Cola","Coca Cola Zero","Fanta","Badoit","Ice Tea");
 
     @FXML
     private RadioButton radioConsoSurPlace;
 
     @FXML
-    private ToggleGroup lieuConsommation;
-
-    @FXML
     private RadioButton radioConsoEmporte;
 
     @FXML
-    private ListView<String> burgerListView;
+    private ComboBox<String> burgerCombo;
 
     @FXML
-    private ListView<String> accompagnementListView;
+    private ComboBox<String> accompagnementCombo;
 
     @FXML
-    private ListView<String> boissonListView;
+    private ComboBox<String> boissonCombo;
 
     @FXML
-    private Button validerButton;
+    private CheckBox ketchupCheck;
 
     @FXML
-    private Button annulerButton;
-
-
+    private CheckBox mayonnaiseCheck;
 
     @FXML
-    private ComboBox<String> burgerComboBox;
+    private CheckBox samouraiCheck;
 
     @FXML
-    private ComboBox<String> sideComboBox;
+    private Button commanderBtn;
 
     @FXML
-    private ComboBox<String> drinkComboBox;
+    private TextArea remarques;
 
-    @Override
+    @FXML
+    private ToggleGroup lieuConsommation;
+
+    @FXML
     public void initialize() {
-        burgerComboBox.setItems(FXCollections.observableArrayList(
-            "Cheeseburger",
-                "Veggie Burger",
-                "Chicken Burger"
-        ));
-        sideComboBox.setItems(FXCollections.observableArrayList(
-                "French Fries",
-                "Qignon Rings",
-                "Nachos"
-        ));
-        drinkComboBox.setItems(FXCollections.observableArrayList(
-                "Ice Tea",
-                "Oasis",
-                "Mountain Dew"
-        ));
+        // Initialiser les ComboBox avec des valeurs par défaut
+        burgerCombo.getItems().addAll("CLELIA Burger", "Cheeseburger", "Double Cheese", "Veggie Burger");
+        accompagnementCombo.getItems().addAll("Frites", "Salade", "Onion Rings", "Coleslaw");
+        boissonCombo.getItems().addAll("Badoit", "Coca-Cola", "Ice Tea", "Fanta");
     }
 
-    private void ajouterNouvelleCommande() {
-        String burger = burgerComboBox.getValue();
-        String accompagnement = sideComboBox.getValue();
-        String boisson = drinkComboBox.getValue();
-        String lieu = ((RadioButton) lieuConsommation.getSelectedToggle()).getText();
-        String remarques = remarquesTextArea.getText();
-    }
+    @FXML
+    private void commander(ActionEvent event) {
+        boolean surPlace = radioConsoSurPlace.isSelected();
+        String burger = burgerCombo.getValue();
+        String accompagnement = accompagnementCombo.getValue();
+        String boisson = boissonCombo.getValue();
 
-/*    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        burgerListView.setItems(burgers);
-        accompagnementListView.setItems(accompagnements);
-        boissonListView.setItems(boissons);
-
-        validerButton.setOnAction(event -> validerCommande());
-        annulerButton.setOnAction(event -> annulerCommande());
-    }*/
-
-    private void validerCommande() {
-        String selectedBurger = burgerListView.getSelectionModel().getSelectedItem();
-        String selectedAccompagnement = accompagnementListView.getSelectionModel().getSelectedItem();
-        String selectedBoisson = boissonListView.getSelectionModel().getSelectedItem();
-
-        if (selectedBurger != null) {
-            commandeService.ajouterBurger(selectedBurger);
-        }
-        if (selectedAccompagnement != null) {
-            commandeService.ajouterAccompagnement(selectedAccompagnement);
-        }
-        if (selectedBoisson != null) {
-            commandeService.ajouterBoisson(selectedBoisson);
+        // Ajoutez les détails de la commande
+        if (burger == null || accompagnement == null || boisson == null) {
+            System.out.println("Veuillez sélectionner un burger, un accompagnement et une boisson.");
+            return;
         }
 
-        if (radioConsoSurPlace.isSelected()) {
-            commandeService.ajouterConsoSurPlace();
-        } else if (radioConsoEmporte.isSelected()) {
-            commandeService.ajouterConsoEmporte();
+        commandeService.ajouterCommande(surPlace, burger, accompagnement, boisson);
+
+        // Afficher confirmation
+        System.out.println("Commande ajoutée pour " + (surPlace ? "sur place" : "à emporter") +
+                " : " + burger + ", " + accompagnement + ", " + boisson);
+
+        if (ketchupCheck.isSelected()) {
+            System.out.println("Avec ketchup");
+        }
+        if (mayonnaiseCheck.isSelected()) {
+            System.out.println("Avec mayonnaise");
+        }
+        if (samouraiCheck.isSelected()) {
+            System.out.println("Avec sauce samouraï");
         }
 
-        commandeService.validerCommande();
+        // Nettoyer les champs
+        clearFields();
     }
 
-    private void annulerCommande() {
-        commandeService.annulerCommande();
-    }
-
-    public void setRemarquesTextArea(String remarquesTextArea) {
-        this.remarquesTextArea = remarquesTextArea;
-    }
-
-    public void commander(ActionEvent actionEvent) {
-        String burger = burgerComboBox.getValue();
-        String accompagnement = sideComboBox.getValue();
-        String boisson = drinkComboBox.getValue();
-        String lieu = ((RadioButton) lieuConsommation.getSelectedToggle()).getText();
-        String remarques = remarquesTextArea;
-
-        StringBuilder sauces = new StringBuilder();
-        if (ketchupCheck.isSelected()) sauces.append("Ketchup ");
-        if (mayonnaiseCheck.isSelected()) sauces.append("Mayonnaise ");
-        if (samouraiCheck.isSelected()) sauces.append("Samourai ");
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        burgerListView.setItems(burgers);
-        accompagnementListView.setItems(accompagnements);
-        boissonListView.setItems(boissons);
-
-        validerButton.setOnAction(event -> validerCommande());
-        annulerButton.setOnAction(event -> annulerCommande());
+    private void clearFields() {
+        burgerCombo.getSelectionModel().clearSelection();
+        accompagnementCombo.getSelectionModel().clearSelection();
+        boissonCombo.getSelectionModel().clearSelection();
+        ketchupCheck.setSelected(false);
+        mayonnaiseCheck.setSelected(false);
+        samouraiCheck.setSelected(false);
+        remarques.clear();
     }
 }

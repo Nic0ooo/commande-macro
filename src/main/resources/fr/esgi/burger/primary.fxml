@@ -36,13 +36,13 @@
 
    <GridPane vgap="10" hgap="10">
       <Label text="Votre burger" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-      <ComboBox promptText="CLELIA Burger" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+      <ComboBox fx:id="burgerCombo" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
       <Label text="Votre accompagnement" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-      <ComboBox promptText="Frites" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+      <ComboBox fx:id="accompagnementCombo" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
       <Label text="Votre boisson" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-      <ComboBox promptText="Badoit" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+      <ComboBox fx:id="boissonCombo" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
    </GridPane>
 
    <Label text="Remarques"/>
